@@ -1,0 +1,18 @@
+function main() {
+    input_file=$1
+    output_path=$(echo $input_file | sed 's/.mp3$//')
+    volume=$(echo $output_path | sed -E 's/[^\/]+$//')
+    listings_path=$2
+
+    docker run -it --rm \
+        -v "$input_file":/home/input.mp3 \
+        -v "$output_path":/home/output/ \
+        -v "$listings_path":/home/listings.txt \
+        split-tracks \
+        python split_to_tracks.py \
+        --input /home/input.mp3 \
+        --output_dir /home/output \
+        --listings /home/listings.txt
+}
+
+main "$@"
